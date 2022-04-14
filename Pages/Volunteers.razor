@@ -40,8 +40,30 @@
 
                                     @foreach (var karmaEvent in volunteer.Events)
                                     {
+                                        var charityEventVolunteer = m_karmaContext.CharityEventVolunteers.Where(p => p.CharityEvent.Id == karmaEvent.Id && p.Volunteer.Id == volunteer.Id).FirstOrDefault();
+                                        
                                         <div @onclick="() => NavigateToIndividualEvent(karmaEvent.Id)">
                                             @karmaEvent.Name
+                                            
+                                            @if (charityEventVolunteer != null)
+                                            {
+                                            <i>
+                                                <br />
+                                                Participated:
+                                                @if (@charityEventVolunteer.Participated)
+                                                {
+                                                    <span>Yes</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>No</span>
+                                                }
+                                                <br />
+                                                Additional participation info:
+                                                @charityEventVolunteer.AdditionalInfo
+                                            </i>
+                                            }
+                                            
                                         </div>
                                     }
                                 }

@@ -16,6 +16,8 @@ namespace Karma.Models
 
         public DbSet<PendingVolunteer> PendingVolunteers { get; set; }
 
+        public DbSet<CharityEventVolunteers> CharityEventVolunteers { get; set; }
+
         public string DbPath { get; private set; }
 
         public KarmaContext() : base() { }

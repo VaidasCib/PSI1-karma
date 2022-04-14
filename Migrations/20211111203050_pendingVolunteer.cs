@@ -7,7 +7,7 @@ namespace Karma.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
+/*            migrationBuilder.CreateTable(
                 name: "PendingVolunteers",
                 columns: table => new
                 {
@@ -19,13 +19,13 @@ namespace Karma.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PendingVolunteers", x => x.Id);
-                });
+                });*/
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "PendingVolunteers");
+/*            migrationBuilder.DropTable(
+                name: "PendingVolunteers");*/
         }
     }
 }
