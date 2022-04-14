@@ -81,6 +81,19 @@ namespace Karma.Pages
             VolunteerCount = charityEvent.MaxVolunteers;
         }
 
+        public CharityEventVolunteers GetCharityEventVolunteer(Guid eventId, Guid volunteerId)
+        {
+            CharityEventVolunteers charityEventVolunteer = m_karmaContext.CharityEventVolunteers.Where(p => p.CharityEvent.Id == eventId && p.Volunteer.Id == volunteerId).FirstOrDefault();
+            if (charityEventVolunteer == null)
+            {
+                charityEventVolunteer = new CharityEventVolunteers();
+                charityEventVolunteer.CharityEvent = m_karmaContext.Events.Where(p => p.Id == eventId).FirstOrDefault();
+                charityEventVolunteer.Volunteer = m_karmaContext.Volunteers.Where(p => p.Id == volunteerId).FirstOrDefault();
+                m_karmaContext.CharityEventVolunteers.Add(charityEventVolunteer);
+            }
+            return charityEventVolunteer;
+        }
+
         public IEnumerable<IVolunteer> GetVolunteersInThisEvent()
         {
             return m_karmaContext.Events.Include(p => p.Volunteers).Where(p => p.Id == Id).Select(p => p.Volunteers).SelectMany(p => p);
@@ -94,18 +107,54 @@ namespace Karma.Pages
         public void AddVolunteerToEvent(Guid id)
         {
             charityEvent.Volunteers.Add(m_karmaContext.Volunteers.Where(p => p.Id == id).FirstOrDefault());
+            CharityEventVolunteers charityEventVolunteer = m_karmaContext.CharityEventVolunteers.Where(p => p.CharityEvent.Id == charityEvent.Id && p.Volunteer.Id == id).FirstOrDefault();
+            if (charityEventVolunteer == null)
+            {
+                charityEventVolunteer = new CharityEventVolunteers();
+                charityEventVolunteer.CharityEvent = m_karmaContext.Events.Where(p => p.Id == charityEvent.Id).FirstOrDefault();
+                charityEventVolunteer.Volunteer = m_karmaContext.Volunteers.Where(p => p.Id == id).FirstOrDefault();
+                charityEventVolunteer.Participated = false;
+                charityEventVolunteer.AdditionalInfo = "";
+                m_karmaContext.CharityEventVolunteers.Add(charityEventVolunteer);
+            }
             m_karmaContext.SaveChanges();
         }
 
         public void RemoveVolunteerFromEvent(Guid id)
         {
             charityEvent.Volunteers.Remove(m_karmaContext.Volunteers.Where(p => p.Id == id).FirstOrDefault());
+            CharityEventVolunteers charityEventVolunteer = m_karmaContext.CharityEventVolunteers.Where(p => p.CharityEvent.Id == charityEvent.Id && p.Volunteer.Id == id).FirstOrDefault();
+            if (charityEventVolunteer != null)
+            {
+                m_karmaContext.CharityEventVolunteers.Remove(charityEventVolunteer);
+            }
             m_karmaContext.SaveChanges();
+        }
+
+        public void SetVolunteerParticipated(Guid id, bool participated)
+        {
+            CharityEventVolunteers charityEventVolunteer = m_karmaContext.CharityEventVolunteers.Where(p => p.CharityEvent.Id == charityEvent.Id && p.Volunteer.Id == id).FirstOrDefault();
+            if (charityEventVolunteer != null)
+            {
+                charityEventVolunteer.Participated = participated;
+            }
+            m_karmaContext.SaveChanges();
+        }
+
+        public bool GetVolunteerParticipated(Guid id)
+        {
+            CharityEventVolunteers charityEventVolunteer = m_karmaContext.CharityEventVolunteers.Where(p => p.CharityEvent.Id == charityEvent.Id && p.Volunteer.Id == id).FirstOrDefault();
+            if (charityEventVolunteer != null)
+            {
+                return charityEventVolunteer.Participated;
+            }
+            return false;
         }
 
         public int GetNumberOfEquipmentOfThisVolunteer(Guid volunteerId)
         {
             return m_karmaContext.SpecialEquipment.Include(p => p.Owner).Where(p => p.Owner.Id == volunteerId).Count();
         }
+
     }
 }
