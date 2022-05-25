@@ -1,4 +1,4 @@
-﻿@page "/registration"
+﻿@page "/registration/{Id:guid}"
 @attribute [Microsoft.AspNetCore.Authorization.AllowAnonymous]
 @inject AuthenticationStateProvider GetAuthenticationStateAsync
 @inject IJSRuntime m_jsRuntime
@@ -13,7 +13,7 @@
     <div class="centerContainer">
         <MatTextField @bind-Value="@Name" @oninput="@((e) => { Name = (string)e.Value; })" Label=" Name" Outlined="false" Class="element"></MatTextField>
         <MatTextField @bind-Value="@Surname" @oninput="@((e) => { Surname = (string)e.Value; })" Label=" Surname" Outlined="false" Class="element"></MatTextField>
-        <MatTextField @bind-Value="@PhoneNumber" @oninput="@((e) => { PhoneNumber = (string)e.Value; })" Label=" Phone Number" Outlined="false" Class="element"></MatTextField>
-        <MatButton Raised="true" class="btn btn-primary element" @onclick="CreatePendingVolunteer">Register</MatButton>
+        <MatTextField @bind-Value="@PhoneNumber" @oninput="@((e) => { PhoneNumber = (string)e.Value; })" Label=" Email" Outlined="false" Class="element"></MatTextField>
+		<MatButton Raised="true" class="btn btn-primary element" @onclick="RegisterToEvent">Register</MatButton>
     </div>
 </div>
