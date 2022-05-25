@@ -26,18 +26,21 @@
 <div class="card-deck">
     @foreach (var karmaEvent in SearchForEvents())
     {
-        <MatCard class="demo-mat-card mx-3" @onclick="()=>NavigateToIndividualEvent(karmaEvent.Id)">
+        <MatCard class="demo-mat-card mx-3">
             <div class="demo-mat-card-content">
                 <MatHeadline6 class="demo-mat-card-clean-margin">
                     @karmaEvent.Name
                 </MatHeadline6>
             </div>
             <MatCardContent>
-                <MatCardMedia Wide="true" ImageUrl=@karmaEvent.PhotoPath></MatCardMedia>
+                <MatCardMedia Wide="true" ImageUrl=@karmaEvent.PhotoPath @onclick="()=>NavigateToIndividualEvent(karmaEvent.Id)"></MatCardMedia>
                 <MatBody2 class="demo-mat-card-content demo-mat-card-clean-margin">
                     @karmaEvent.Description
                 </MatBody2>
             </MatCardContent>
+			@if(CurrentUserId == null) {
+			<MatButton Raised="true" class="btn btn-primary element" @onclick="()=>RegisterToEvent(karmaEvent.Id)">Register</MatButton>
+		}
         </MatCard>
     }
 </div>

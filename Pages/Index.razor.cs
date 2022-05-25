@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Karma.Models;
@@ -22,14 +23,19 @@ namespace Karma.Pages
         public IEnumerable<IGenericKarmaItem> karmaEvents;
 
         [Inject]
-        private IDbContextFactory<KarmaContext> m_contextFactory{ get; set; }
+        private IDbContextFactory<KarmaContext> m_contextFactory { get; set; }
 
         private KarmaContext m_karmaContext;
+
+        public string CurrentUserId { get; set; }
 
         protected override void OnInitialized()
         {
             m_karmaContext = m_contextFactory.CreateDbContext();
             LoadEvents(elementsPerPage: perPage);
+
+            ClaimsPrincipal principal = m_httpContextAccessor.HttpContext.User;
+            CurrentUserId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
         public void SelectedPage(int page)
@@ -76,6 +82,11 @@ namespace Karma.Pages
         public void NavigateToIndividualEvent(Guid id)
         {
             m_uriHelper.NavigateTo($"event/{id}");
+        }
+
+        public void RegisterToEvent(Guid id)
+        {
+            m_uriHelper.NavigateTo($"registration/{id}");
         }
     }
 }
